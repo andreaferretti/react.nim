@@ -8,9 +8,12 @@ type
   ReactDescriptor* {.importcpp.}[P, S] = ref object of RootObj
     render* {.exportc.}: proc(): ReactNode
     componentWillMount* {.exportc.}: proc(): void
+    componentWillUnmount* {.exportc.}: proc(): void
     componentDidMount* {.exportc.}: proc(): void
     componentWillReceiveProps* {.exportc.}: proc(nextProps: P): void
     shouldComponentUpdate* {.exportc.}: proc(nextProps: P, nextState: S): bool
+    componentWillUpdate* {.exportc.}: proc(nextProps: P, nextState: S): bool
+    componentDidUpdate* {.exportc.}: proc(prevProps: P, prevState: S): bool
     getInitialState* {.exportc.}: proc(): S
   ReactComponent* {.importc.} = ref object of RootObj
   ReactNode* {.importc.} = ref object of RootObj
@@ -97,6 +100,11 @@ template addMethods(body: stmt): auto =
       var this {.importc,nodecl.}: C
       componentWillMount(this)
 
+  when compiles(componentWillUnmount(c)):
+    d.componentWillUnmount = proc(): auto =
+      var this {.importc,nodecl.}: C
+      componentWillUnmount(this)
+
   when compiles(componentDidMount(c)):
     d.componentDidMount = proc(): auto =
       var this {.importc,nodecl.}: C
@@ -116,6 +124,23 @@ template addMethods(body: stmt): auto =
       var this {.importc,nodecl.}: C
       return shouldComponentUpdate(this, nextProps)
 
+  when compiles(componentWillUpdate(c, c.props, c.state)):
+    d.componentWillUpdate = proc(nextProps: P, nextState: S): auto =
+      var this {.importc,nodecl.}: C
+      return componentWillUpdate(this, nextProps, nextState)
+  elif compiles(componentWillUpdate(c, c.props)):
+    d.componentWillUpdate = proc(nextProps: P): bool =
+      var this {.importc,nodecl.}: C
+      return componentWillUpdate(this, nextProps)
+
+  when compiles(componentDidUpdate(c, c.props, c.state)):
+    d.componentDidUpdate = proc(nextProps: P, nextState: S): auto =
+      var this {.importc,nodecl.}: C
+      return componentDidUpdate(this, nextProps, nextState)
+  elif compiles(componentDidUpdate(c, c.props)):
+    d.componentDidUpdate = proc(nextProps: P): bool =
+      var this {.importc,nodecl.}: C
+      return componentDidUpdate(this, nextProps)
 
   when compiles(getInitialState(c.props)):
     d.getInitialState = proc(): auto =
