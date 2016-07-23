@@ -48,9 +48,11 @@ proc multigreetings(): ReactComponent =
     proc getInitialState(props: MultiGreet): auto =
       Choice(first: false)
 
+let mg = multigreetings()
+
 proc startApp() {.exportc.} =
   console.log React.version
   let
     content = document.getElementById("content")
-    Hello = React.createElement(multigreetings(), MultiGreet(name1: "Andrea", name2: "pippo"))
+    Hello = React.createElement(mg, MultiGreet(name1: "Andrea", name2: "pippo"))
   ReactDOM.render(Hello, content)
