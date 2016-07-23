@@ -1,5 +1,5 @@
 # nim js -o=spa.js spa.nim
-import dom, jsconsole, react, future, macros
+import dom, jsconsole, react, future
 
 type
   Greet = ref object of RootObj
@@ -26,8 +26,6 @@ proc greetings(): ReactComponent =
 
 proc multigreetings(): ReactComponent =
   defineComponent:
-    proc setState(m: MultiGreetings, state: Choice) {.importcpp.}
-
     proc renderComponent(m: MultiGreetings): auto =
       if m.state.first:
         React.createElement(greetings(), Greet(name: m.props.name1))

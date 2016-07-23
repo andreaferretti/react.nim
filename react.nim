@@ -1,4 +1,4 @@
-import macros, dom, jsconsole
+import macros, dom, jsconsole, typetraits
 
 type
   ReactGlobal* {.importc.} = ref object of RootObj
@@ -62,6 +62,7 @@ type
   Component*[P, S] = ref object of RootObj
     props*: P
     state*: S
+    setState* {.importcpp.}: proc(s: S)
   StatelessComponent*[P] = Component[P, void]
 
 macro findComponentType(body: stmt): auto =
@@ -73,12 +74,7 @@ macro findComponentType(body: stmt): auto =
     error("Could not find the `renderComponent` procedure")
   return tp
 
-# template addSetState(body: stmt): auto =
-#   type T = findComponentType(body)
-#
-#   proc setState(c: T, state: Choice) {.importcpp.}
-
-template helper(body: stmt): auto =
+template addMethods(body: stmt): auto =
   type T = findComponentType(body)
   var x: T
   var d = ReactDescriptor()
@@ -107,9 +103,7 @@ template helper(body: stmt): auto =
 
 macro defineComponent*(body: stmt): auto =
   result = newStmtList()
-  # for x in getAst(addSetState(body)):
-  #   result.add(x)
   for x in body:
     result.add(x)
-  for x in getAst(helper(body)):
+  for x in getAst(addMethods(body)):
     result.add(x)
