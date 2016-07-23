@@ -32,8 +32,8 @@ var
 
 macro idString(x: untyped): auto = newStrLitNode($x)
 
-template makeDomElement(x: untyped) {.dirty.} =
-  const tag = idString(x)
+template makeDomElement(x: untyped) =
+  const tag {.gensym.} = idString(x)
 
   proc x*[A1](a: Attrs, el1: A1): ReactNode =
     React.createElement(tag, a, el1)
@@ -54,25 +54,18 @@ template makeDomElement(x: untyped) {.dirty.} =
     React.createElement(x, nil, el1, el2, el3, el4)
 
 makeDomElement(p)
+makeDomElement(`div`)
+makeDomElement(span)
+makeDomElement(strong)
 
 # proc render*(reactDom: ReactDOMGlobal, c: ReactComponent, el: Element) =
 #   reactDom.render(React.createElement(c), el)
 
 type
-  BaseComponent*[P, S] = ref object of RootObj
+  Component*[P, S] = ref object of RootObj
     props*: P
     state*: S
-  StatelessComponent*[P] = BaseComponent[P, void]
-
-# type Backend*[P, S] = ref object of RootObj
-#   forProps*, forState*: BaseComponent[P, S]
-#
-# proc props*[P, S](backend: Backend[P, S]): P = backend.forProps.props
-#
-# proc state*[P, S](backend: Backend[P, S]): S = backend.forState.state
-#
-# template setState*[P, S](backend: Backend[P, S], state: S) =
-#   backend.forState.setState(state)
+  StatelessComponent*[P] = Component[P, void]
 
 macro findComponentType(body: stmt): auto =
   var tp: NimNode

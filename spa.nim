@@ -9,7 +9,7 @@ type
     name1, name2: cstring
   Choice = ref object
     first: bool
-  MultiGreetings = ref object of BaseComponent[MultiGreet, Choice]
+  MultiGreetings = ref object of Component[MultiGreet, Choice]
 
 proc greetings(): ReactComponent =
   defineComponent:
@@ -25,7 +25,7 @@ proc greetings(): ReactComponent =
 
 
 proc component(t: typedesc[MultiGreetings]): auto =
-  proc setState(c: BaseComponent[MultiGreet, Choice], state: Choice) {.importcpp.}
+  proc setState(c: Component[MultiGreet, Choice], state: Choice) {.importcpp.}
 
   # Begin user code
   proc render(m: MultiGreetings): auto =
