@@ -16,7 +16,7 @@ proc greetings(): ReactComponent =
       section(
         h1(cstring("Greetings!")),
         p(
-          Attrs(style: Style(color: "red"), onClick: () => console.log("clicked")),
+          Attrs(style: Style(color: "red"), className: "some-class", onClick: () => console.log("clicked")),
           cstring("Hello "),
           g.props.name
         )

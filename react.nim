@@ -19,7 +19,8 @@ type
   ReactNode* {.importc.} = ref object of RootObj
   Attrs* = ref object
     onClick* {.exportc.}: proc(): void
-    id*, className* {.exportc.}: cstring
+    className* {.exportc.}, id* {.exportc.}, placeholder* {.exportc.}, target* {.exportc.}: cstring
+    checked* {.exportc.}, readOnly* {.exportc.}, required* {.exportc.}: bool
     style* {.exportc.}: Style
   Style* = ref object
     color* {.exportc.}, backgroundColor* {.exportc.}: cstring
