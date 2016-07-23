@@ -5,17 +5,19 @@ type
     version*: cstring
   ReactDOMGlobal* {.importc.} = ref object of RootObj
     version*: cstring
-  ReactDescriptor* {.importc.} = ref object of RootObj
+  ReactDescriptor* {.importcpp.}[P, S] = ref object of RootObj
     render* {.exportc.}: proc(): ReactNode
     componentWillMount* {.exportc.}: proc(): void
     componentDidMount* {.exportc.}: proc(): void
-    getInitialState* {.exportc.}: proc(): auto
+    componentWillReceiveProps* {.exportc.}: proc(nextProps: P): void
+    getInitialState* {.exportc.}: proc(): S
   ReactComponent* {.importc.} = ref object of RootObj
   ReactNode* {.importc.} = ref object of RootObj
-  Attrs* {.importc.} = ref object
+  Attrs* = ref object
     onClick* {.exportc.}: proc(): void
+    id*, className* {.exportc.}: cstring
     style* {.exportc.}: Style
-  Style* {.importc.} = ref object
+  Style* = ref object
     color* {.exportc.}, backgroundColor* {.exportc.}: cstring
 
 {.push importcpp .}
@@ -75,28 +77,38 @@ macro findComponentType(body: stmt): auto =
   return tp
 
 template addMethods(body: stmt): auto =
-  type T = findComponentType(body)
-  var x: T
-  var d = ReactDescriptor()
+  type C = findComponentType(body)
+  var c: C
+  type P = type(c.props)
+  when compiles(c.state):
+    type S = type(c.state)
+    var d = ReactDescriptor[P, S]()
+  else:
+    var d = ReactDescriptor[P, void]()
 
-  when compiles(renderComponent(x)):
+  when compiles(renderComponent(c)):
     d.render = proc(): auto =
-      var this {.importc,nodecl.}: T
+      var this {.importc,nodecl.}: C
       return renderComponent(this)
 
-  when compiles(componentWillMount(x)):
+  when compiles(componentWillMount(c)):
     d.componentWillMount = proc(): auto =
-      var this {.importc,nodecl.}: T
+      var this {.importc,nodecl.}: C
       componentWillMount(this)
 
-  when compiles(componentDidMount(x)):
+  when compiles(componentDidMount(c)):
     d.componentDidMount = proc(): auto =
-      var this {.importc,nodecl.}: T
+      var this {.importc,nodecl.}: C
       componentDidMount(this)
 
-  when compiles(getInitialState(x.props)):
+  when compiles(componentWillReceiveProps(c, c.props)):
+    d.componentWillReceiveProps = proc(nextProps: P): auto =
+      var this {.importc,nodecl.}: C
+      componentWillReceiveProps(this, nextProps)
+
+  when compiles(getInitialState(c.props)):
     d.getInitialState = proc(): auto =
-      var this {.importc,nodecl.}: T
+      var this {.importc,nodecl.}: C
       return getInitialState(this.props)
 
   return React.createClass(d)

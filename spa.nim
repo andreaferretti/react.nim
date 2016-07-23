@@ -23,14 +23,16 @@ proc greetings(): ReactComponent =
 
     proc componentDidMount(g: Greetings) = console.log("Mounted")
 
+    proc componentWillReceiveProps(g: Greetings, p: Greet) = console.log(p)
 
 proc multigreetings(): ReactComponent =
   defineComponent:
     proc renderComponent(m: MultiGreetings): auto =
+      let g = greetings()
       if m.state.first:
-        React.createElement(greetings(), Greet(name: m.props.name1))
+        React.createElement(g, Greet(name: m.props.name1))
       else:
-        React.createElement(greetings(), Greet(name: m.props.name2))
+        React.createElement(g, Greet(name: m.props.name2))
 
     proc componentWillMount(m: MultiGreetings) =
       discard window.setTimeout(() => m.setState(Choice(first: true)), 1000)
