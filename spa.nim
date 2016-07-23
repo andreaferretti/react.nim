@@ -1,5 +1,5 @@
 # nim js -o=spa.js spa.nim
-import dom, jsconsole, react, future
+import dom, jsconsole, react, future, macros
 
 type
   Greet = ref object of RootObj
@@ -11,31 +11,18 @@ type
     first: bool
   MultiGreetings = ref object of BaseComponent[MultiGreet, Choice]
 
-proc component(t: typedesc[Greetings]): auto =
-  proc render(g: Greetings): auto = p(
-    Attrs(style: Style(color: "red"), onClick: () => console.log("clicked")),
-    "Hello ",
-    g.props.name
-  )
+proc greetings(): ReactComponent =
+  defineComponent:
+    proc renderComponent(g: Greetings): auto = p(
+      Attrs(style: Style(color: "red"), onClick: () => console.log("clicked")),
+      "Hello ",
+      g.props.name
+    )
 
-  proc componentWillMount(g: Greetings) = console.log("Mounting")
+    proc componentWillMount(g: Greetings) = console.log("Mounting")
 
-  proc componentDidMount(g: Greetings) = console.log("Mounted")
-  # End user code
+    proc componentDidMount(g: Greetings) = console.log("Mounted")
 
-  var d = ReactDescriptor()
-
-  d.render = proc(): auto =
-    var this {.importc,nodecl.}: Greetings
-    return render(this)
-  d.componentWillMount = proc() =
-    var this {.importc,nodecl.}: Greetings
-    componentWillMount(this)
-  d.componentDidMount = proc() =
-    var this {.importc,nodecl.}: Greetings
-    componentDidMount(this)
-
-  return React.createClass(d)
 
 proc component(t: typedesc[MultiGreetings]): auto =
   proc setState(c: BaseComponent[MultiGreet, Choice], state: Choice) {.importcpp.}
@@ -43,9 +30,9 @@ proc component(t: typedesc[MultiGreetings]): auto =
   # Begin user code
   proc render(m: MultiGreetings): auto =
     if m.state.first:
-      React.createElement(component(Greetings), Greet(name: m.props.name1))
+      React.createElement(greetings(), Greet(name: m.props.name1))
     else:
-      React.createElement(component(Greetings), Greet(name: m.props.name2))
+      React.createElement(greetings(), Greet(name: m.props.name2))
 
   proc componentWillMount(m: MultiGreetings) =
     discard window.setTimeout(() => m.setState(Choice(first: true)), 1000)

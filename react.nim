@@ -1,4 +1,4 @@
-import dom, jsconsole
+import macros, dom, jsconsole
 
 type
   ReactGlobal* {.importc.} = ref object of RootObj
@@ -66,3 +66,41 @@ type
 #
 # template setState*[P, S](backend: Backend[P, S], state: S) =
 #   backend.forState.setState(state)
+
+macro findComponentType(body: stmt): auto =
+  var tp: NimNode
+  for x in body:
+    if x.kind == nnkProcDef and $x[0] == "renderComponent":
+      tp = x[3][1][1] # the type of the first arg of `render`
+  if tp == nil:
+    error("Could not find the `renderComponent` procedure")
+  return tp
+
+template helper(body: stmt): auto =
+  type T = findComponentType(body)
+  var x: T
+  var d = ReactDescriptor()
+
+  when compiles(renderComponent(x)):
+    d.render = proc(): auto =
+      var this {.importc,nodecl.}: T
+      return renderComponent(this)
+
+  when compiles(componentWillMount(x)):
+    d.componentWillMount = proc(): auto =
+      var this {.importc,nodecl.}: T
+      componentWillMount(this)
+
+  when compiles(componentDidMount(x)):
+    d.componentDidMount = proc(): auto =
+      var this {.importc,nodecl.}: T
+      componentDidMount(this)
+
+  return React.createClass(d)
+
+macro defineComponent*(body: stmt): auto =
+  result = newStmtList()
+  for x in body:
+    result.add(x)
+  for x in getAst(helper(body)):
+    result.add(x)
