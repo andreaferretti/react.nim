@@ -9,7 +9,7 @@ type
     render* {.exportc.}: proc(): ReactNode
     componentWillMount* {.exportc.}: proc(): void
     componentDidMount* {.exportc.}: proc(): void
-    getInitialState* {.exportc.}: proc(): RootObj
+    getInitialState* {.exportc.}: proc(): auto
   ReactComponent* {.importc.} = ref object of RootObj
   ReactNode* {.importc.} = ref object of RootObj
   Attrs* {.importc.} = ref object
@@ -58,9 +58,6 @@ makeDomElement(`div`)
 makeDomElement(span)
 makeDomElement(strong)
 
-# proc render*(reactDom: ReactDOMGlobal, c: ReactComponent, el: Element) =
-#   reactDom.render(React.createElement(c), el)
-
 type
   Component*[P, S] = ref object of RootObj
     props*: P
@@ -75,6 +72,11 @@ macro findComponentType(body: stmt): auto =
   if tp == nil:
     error("Could not find the `renderComponent` procedure")
   return tp
+
+# template addSetState(body: stmt): auto =
+#   type T = findComponentType(body)
+#
+#   proc setState(c: T, state: Choice) {.importcpp.}
 
 template helper(body: stmt): auto =
   type T = findComponentType(body)
@@ -96,10 +98,17 @@ template helper(body: stmt): auto =
       var this {.importc,nodecl.}: T
       componentDidMount(this)
 
+  when compiles(getInitialState(x.props)):
+    d.getInitialState = proc(): auto =
+      var this {.importc,nodecl.}: T
+      return getInitialState(this.props)
+
   return React.createClass(d)
 
 macro defineComponent*(body: stmt): auto =
   result = newStmtList()
+  # for x in getAst(addSetState(body)):
+  #   result.add(x)
   for x in body:
     result.add(x)
   for x in getAst(helper(body)):
