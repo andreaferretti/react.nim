@@ -5,7 +5,7 @@ type
     version*: cstring
   ReactDOMGlobal* {.importc.} = ref object of RootObj
     version*: cstring
-  ReactDescriptor* {.importcpp.}[P, S] = ref object of RootObj
+  ReactDescriptor {.importcpp.}[P, S] = ref object of RootObj
     render* {.exportc.}: proc(): ReactNode
     componentWillMount* {.exportc.}: proc(): void
     componentWillUnmount* {.exportc.}: proc(): void
