@@ -23,9 +23,14 @@ type
     style* {.exportc.}: Style
   Style* = ref object
     color* {.exportc.}, backgroundColor* {.exportc.}: cstring
+  NodeOrString = ReactNode or cstring or string
 
 {.push importcpp .}
-proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs): ReactNode {.varargs.}
+proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1: auto): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1, n2: auto): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1, n2, n3: auto): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1, n2, n3, n4: auto): ReactNode
 proc createElement*(react: ReactGlobal, c: ReactComponent, props: ref RootObj): ReactNode {.varargs.}
 proc createElement*(react: ReactGlobal, c: ReactComponent): ReactNode
 proc createClass*(react: ReactGlobal, c: ReactDescriptor): ReactComponent
@@ -39,30 +44,145 @@ var
 macro idString(x: untyped): auto = newStrLitNode($x)
 
 template makeDomElement(x: untyped) =
-  const tag {.gensym.} = idString(x)
+  const tag {.gensym.} = cstring(idString(x))
 
-  proc x*[A1](a: Attrs, el1: A1): ReactNode =
-    React.createElement(tag, a, el1)
-  proc x*[A1, A2](a: Attrs, el1: A1, el2: A2): ReactNode =
-    React.createElement(tag, a, el1, el2)
-  proc x*[A1, A2, A3](a: Attrs, el1: A1, el2: A2, el3: A3): ReactNode =
-    React.createElement(tag, a, el1, el2, el3)
-  proc x*[A1, A2, A3, A4](a: Attrs, el1: A1, el2: A2, el3: A3, el4: A4): ReactNode =
-    React.createElement(tag, a, el1, el2, el3, el4)
+  proc x*(a: Attrs, n1: NodeOrString): ReactNode =
+    React.createElement(tag, a, n1)
+  proc x*(a: Attrs, n1, n2: NodeOrString): ReactNode =
+    React.createElement(tag, a, n1, n2)
+  proc x*(a: Attrs, n1, n2, n3: NodeOrString): ReactNode =
+    React.createElement(tag, a, n1, n2, n3)
+  proc x*(a: Attrs, n1, n2, n3, n4: NodeOrString): ReactNode =
+    React.createElement(tag, a, n1, n2, n3, n4)
 
-  proc x*[A1](el1: A1): ReactNode =
-    React.createElement(x, nil, el1)
-  proc x*[A1, A2](el1: A1, el2: A2): ReactNode =
-    React.createElement(x, nil, el1, el2)
-  proc x*[A1, A2, A3](el1: A1, el2: A2, el3: A3): ReactNode =
-    React.createElement(x, nil, el1, el2, el3)
-  proc x*[A1, A2, A3, A4](el1: A1, el2: A2, el3: A3, el4: A4): ReactNode =
-    React.createElement(x, nil, el1, el2, el3, el4)
+  proc x*(n1: NodeOrString): ReactNode =
+    React.createElement(tag, nil, n1)
+  proc x*(n1, n2: NodeOrString): ReactNode =
+    React.createElement(tag, nil, n1, n2)
+  proc x*(n1, n2, n3: NodeOrString): ReactNode =
+    React.createElement(tag, nil, n1, n2, n3)
+  proc x*(n1, n2, n3, n4: NodeOrString): ReactNode =
+    React.createElement(tag, nil, n1, n2, n3, n4)
 
-makeDomElement(p)
+makeDomElement(a)
+makeDomElement(abbr)
+makeDomElement(address)
+makeDomElement(area)
+makeDomElement(article)
+makeDomElement(aside)
+makeDomElement(audio)
+makeDomElement(b)
+makeDomElement(base)
+makeDomElement(bdi)
+makeDomElement(bdo)
+makeDomElement(big)
+makeDomElement(blockquote)
+makeDomElement(body)
+makeDomElement(br)
+makeDomElement(button)
+makeDomElement(canvas)
+makeDomElement(caption)
+makeDomElement(cite)
+makeDomElement(code)
+makeDomElement(col)
+makeDomElement(colgroup)
+makeDomElement(data)
+makeDomElement(datalist)
+makeDomElement(dd)
+makeDomElement(del)
+makeDomElement(details)
+makeDomElement(dfn)
+makeDomElement(dialog)
 makeDomElement(`div`)
+makeDomElement(dl)
+makeDomElement(dt)
+makeDomElement(em)
+makeDomElement(embed)
+makeDomElement(fieldset)
+makeDomElement(figcaption)
+makeDomElement(figure)
+makeDomElement(footer)
+makeDomElement(form)
+makeDomElement(h1)
+makeDomElement(h2)
+makeDomElement(h3)
+makeDomElement(h4)
+makeDomElement(h5)
+makeDomElement(h6)
+makeDomElement(head)
+makeDomElement(header)
+makeDomElement(hgroup)
+makeDomElement(hr)
+makeDomElement(html)
+makeDomElement(i)
+makeDomElement(iframe)
+makeDomElement(img)
+makeDomElement(input)
+makeDomElement(ins)
+makeDomElement(kbd)
+makeDomElement(keygen)
+makeDomElement(label)
+makeDomElement(legend)
+makeDomElement(li)
+makeDomElement(link)
+makeDomElement(main)
+makeDomElement(map)
+makeDomElement(mark)
+makeDomElement(menu)
+makeDomElement(menuitem)
+makeDomElement(meta)
+makeDomElement(meter)
+makeDomElement(nav)
+makeDomElement(noscript)
+makeDomElement(`object`)
+makeDomElement(ol)
+makeDomElement(optgroup)
+makeDomElement(option)
+makeDomElement(output)
+makeDomElement(p)
+makeDomElement(param)
+makeDomElement(picture)
+makeDomElement(pre)
+makeDomElement(progress)
+makeDomElement(q)
+makeDomElement(rp)
+makeDomElement(rt)
+makeDomElement(ruby)
+makeDomElement(s)
+makeDomElement(samp)
+makeDomElement(script)
+makeDomElement(section)
+makeDomElement(select)
+makeDomElement(small)
+makeDomElement(source)
 makeDomElement(span)
 makeDomElement(strong)
+makeDomElement(style)
+makeDomElement(sub)
+makeDomElement(summary)
+makeDomElement(sup)
+makeDomElement(table)
+makeDomElement(tbody)
+makeDomElement(td)
+makeDomElement(textarea)
+makeDomElement(tfoot)
+makeDomElement(th)
+makeDomElement(thead)
+makeDomElement(time)
+makeDomElement(title)
+makeDomElement(tr)
+makeDomElement(track)
+makeDomElement(u)
+makeDomElement(ul)
+makeDomElement(`var`)
+makeDomElement(video)
+makeDomElement(wbr)
+
+
+# makeDomElement(p)
+# makeDomElement(`div`)
+# makeDomElement(span)
+# makeDomElement(strong)
 
 type
   Component*[P, S] = ref object of RootObj

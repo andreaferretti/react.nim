@@ -1,4 +1,3 @@
-# nim js -o=spa.js spa.nim
 import dom, jsconsole, react, future
 
 type
@@ -13,11 +12,15 @@ type
 
 proc greetings(): ReactComponent =
   defineComponent:
-    proc renderComponent(g: Greetings): auto = p(
-      Attrs(style: Style(color: "red"), onClick: () => console.log("clicked")),
-      "Hello ",
-      g.props.name
-    )
+    proc renderComponent(g: Greetings): auto =
+      section(
+        h1(cstring("Greetings!")),
+        p(
+          Attrs(style: Style(color: "red"), onClick: () => console.log("clicked")),
+          cstring("Hello "),
+          g.props.name
+        )
+      )
 
     proc componentWillMount(g: Greetings) = console.log("Mounting")
 
