@@ -10,6 +10,7 @@ type
     componentWillMount* {.exportc.}: proc(): void
     componentDidMount* {.exportc.}: proc(): void
     componentWillReceiveProps* {.exportc.}: proc(nextProps: P): void
+    shouldComponentUpdate* {.exportc.}: proc(nextProps: P, nextState: S): bool
     getInitialState* {.exportc.}: proc(): S
   ReactComponent* {.importc.} = ref object of RootObj
   ReactNode* {.importc.} = ref object of RootObj
@@ -105,6 +106,16 @@ template addMethods(body: stmt): auto =
     d.componentWillReceiveProps = proc(nextProps: P): auto =
       var this {.importc,nodecl.}: C
       componentWillReceiveProps(this, nextProps)
+
+  when compiles(shouldComponentUpdate(c, c.props, c.state)):
+    d.shouldComponentUpdate = proc(nextProps: P, nextState: S): auto =
+      var this {.importc,nodecl.}: C
+      return shouldComponentUpdate(this, nextProps, nextState)
+  elif compiles(shouldComponentUpdate(c, c.props)):
+    d.shouldComponentUpdate = proc(nextProps: P): bool =
+      var this {.importc,nodecl.}: C
+      return shouldComponentUpdate(this, nextProps)
+
 
   when compiles(getInitialState(c.props)):
     d.getInitialState = proc(): auto =

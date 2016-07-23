@@ -23,12 +23,20 @@ proc greetings(): ReactComponent =
 
     proc componentDidMount(g: Greetings) = console.log("Mounted")
 
-    proc componentWillReceiveProps(g: Greetings, p: Greet) = console.log(p)
+    proc componentWillReceiveProps(g: Greetings, p: Greet) =
+      console.log("Receiving props")
+      console.log(p)
+
+    proc shouldComponentUpdate(g: Greetings, p: Greet): bool =
+      console.log("Let us update the component")
+      return true
+
+let g = greetings()
+
 
 proc multigreetings(): ReactComponent =
   defineComponent:
     proc renderComponent(m: MultiGreetings): auto =
-      let g = greetings()
       if m.state.first:
         React.createElement(g, Greet(name: m.props.name1))
       else:
