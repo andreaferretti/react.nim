@@ -30,23 +30,30 @@ var
   React* {.importc, nodecl.}: ReactGlobal
   ReactDOM* {.importc, nodecl.}: ReactDOMGlobal
 
-proc p*[A1](a: Attrs, el1: A1): ReactNode =
-  React.createElement("p", a, el1)
-proc p*[A1, A2](a: Attrs, el1: A1, el2: A2): ReactNode =
-  React.createElement("p", a, el1, el2)
-proc p*[A1, A2, A3](a: Attrs, el1: A1, el2: A2, el3: A3): ReactNode =
-  React.createElement("p", a, el1, el2, el3)
-proc p*[A1, A2, A3, A4](a: Attrs, el1: A1, el2: A2, el3: A3, el4: A4): ReactNode =
-  React.createElement("p", a, el1, el2, el3, el4)
+macro idString(x: untyped): auto = newStrLitNode($x)
 
-proc p*[A1](el1: A1): ReactNode =
-  React.createElement("p", nil, el1)
-proc p*[A1, A2](el1: A1, el2: A2): ReactNode =
-  React.createElement("p", nil, el1, el2)
-proc p*[A1, A2, A3](el1: A1, el2: A2, el3: A3): ReactNode =
-  React.createElement("p", nil, el1, el2, el3)
-proc p*[A1, A2, A3, A4](el1: A1, el2: A2, el3: A3, el4: A4): ReactNode =
-  React.createElement("p", nil, el1, el2, el3, el4)
+template makeDomElement(x: untyped) {.dirty.} =
+  const tag = idString(x)
+
+  proc x*[A1](a: Attrs, el1: A1): ReactNode =
+    React.createElement(tag, a, el1)
+  proc x*[A1, A2](a: Attrs, el1: A1, el2: A2): ReactNode =
+    React.createElement(tag, a, el1, el2)
+  proc x*[A1, A2, A3](a: Attrs, el1: A1, el2: A2, el3: A3): ReactNode =
+    React.createElement(tag, a, el1, el2, el3)
+  proc x*[A1, A2, A3, A4](a: Attrs, el1: A1, el2: A2, el3: A3, el4: A4): ReactNode =
+    React.createElement(tag, a, el1, el2, el3, el4)
+
+  proc x*[A1](el1: A1): ReactNode =
+    React.createElement(x, nil, el1)
+  proc x*[A1, A2](el1: A1, el2: A2): ReactNode =
+    React.createElement(x, nil, el1, el2)
+  proc x*[A1, A2, A3](el1: A1, el2: A2, el3: A3): ReactNode =
+    React.createElement(x, nil, el1, el2, el3)
+  proc x*[A1, A2, A3, A4](el1: A1, el2: A2, el3: A3, el4: A4): ReactNode =
+    React.createElement(x, nil, el1, el2, el3, el4)
+
+makeDomElement(p)
 
 # proc render*(reactDom: ReactDOMGlobal, c: ReactComponent, el: Element) =
 #   reactDom.render(React.createElement(c), el)
