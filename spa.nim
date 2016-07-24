@@ -1,4 +1,5 @@
-import dom, jsconsole, react, future
+import dom, jsconsole, future
+import react, reactdom
 
 type
   Greet = ref object of RootObj
