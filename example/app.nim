@@ -65,14 +65,14 @@ proc makeTopLevel(): ReactComponent =
       section(
         section(Attrs(className: "row", key: "search"),
           section(Attrs(className: "col-md-4"),
-            React.createElement(search, ValueLink(
+            search(ValueLink(
               value: s.state.query,
               handler: proc(q: string) = s.setState(Filter(query: q))
             ))
           )
         ),
         section(Attrs(className: "row", key: "list"),
-          React.createElement(items, ItemFilter(
+          items(ItemFilter(
             countries: s.props.countries,
             query: s.state.query
           ))
@@ -96,5 +96,5 @@ proc startApp() {.exportc.} =
       Country(name: "Japan", population: 127290000)
     ])
     content = document.getElementById("content")
-    Main = React.createElement(topLevel, countries)
+    Main = topLevel(countries)
   ReactDOM.render(Main, content)

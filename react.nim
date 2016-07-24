@@ -138,3 +138,6 @@ macro defineComponent*(body: stmt): auto =
     result.add(x)
   for x in getAst(addMethods(body)):
     result.add(x)
+
+proc `()`*[P](c: ReactComponent, p: P): ReactNode =
+  React.createElement(c, p)
