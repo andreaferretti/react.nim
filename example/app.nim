@@ -63,7 +63,7 @@ proc makeTopLevel(): ReactComponent =
   defineComponent:
     proc renderComponent(s: TopLevel): auto =
       section(
-        section(attrs(only(className: "row", key: "search")),
+        section(attrs(only(className: "row")),
           section(attrs(only(className: "col-md-4")),
             search(ValueLink(
               value: s.state.query,
@@ -71,7 +71,7 @@ proc makeTopLevel(): ReactComponent =
             ))
           )
         ),
-        section(attrs(only(className: "row", key: "list")),
+        section(attrs(only(className: "row")),
           items(ItemFilter(
             countries: s.props.countries,
             query: s.state.query
