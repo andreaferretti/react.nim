@@ -1,7 +1,7 @@
 import macros
 import react
 
-type NodeOrString = ReactNode or cstring or string
+type NodeOrString = ReactNode or seq[ReactNode] or cstring or string
 
 macro idString(x: untyped): auto = newStrLitNode($x)
 
