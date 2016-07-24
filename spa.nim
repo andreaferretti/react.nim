@@ -1,5 +1,6 @@
 import dom, jsconsole, future
-import react, reactdom
+import react
+from reactdom import section, h1, p
 
 type
   Greet = ref object of RootObj
