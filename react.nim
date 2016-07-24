@@ -139,5 +139,30 @@ macro defineComponent*(body: stmt): auto =
   for x in getAst(addMethods(body)):
     result.add(x)
 
+macro attrs*(xs: untyped): Attrs =
+  let a = !"a"
+  var body = quote do:
+    var `a` {.noinit.}: Attrs
+    {.emit: "`a` = {};" .}
+
+  for x in xs:
+    if x.kind == nnkExprColonExpr:
+      let
+        k = x[0]
+        v = x[1]
+      body.add(quote do:
+        `a`.`k` = `v`
+      )
+
+  body.add(quote do:
+    return `a`
+  )
+
+  result = quote do:
+    proc inner(): Attrs {.gensym.} =
+      `body`
+
+    inner()
+
 proc `()`*[P](c: ReactComponent, p: P): ReactNode =
   React.createElement(c, p)
