@@ -9,8 +9,8 @@ license       = "Apache2"
 
 requires "nim >= 0.14.3"
 
-task dist, "builds application":
+task example, "builds example application":
   --define: release
-  switch("out", "spa.js")
+  switch("out", "example/app.js")
   --path: "."
-  setCommand "js", "spa"
+  setCommand "js", "example/app"
