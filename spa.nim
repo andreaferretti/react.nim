@@ -28,7 +28,10 @@ proc makeItems(): ReactComponent =
       let
         f = xs.props
         countries = f.countries.filter((s) => s.name.toLower.contains(f.query))
-        list = ul(countries.map((c) => li(Attrs(key: c.name), cstring(c.name & ": " & $c.population))))
+        list = ul(countries.map((c) => li(
+          Attrs(key: c.name),
+          cstring(c.name & ": " & $c.population))) # TODO: cstring should not be needed
+        )
       return section(Attrs(className: "col-md-4"), list)
 
     discard # TODO: adjust the macro so that this is not needed
@@ -86,8 +89,11 @@ proc startApp() {.exportc.} =
   console.log React.version
   let
     countries = Countries(countries: @[
-      Country(name: "Italy", population: 123456),
-      Country(name: "France", population: 1234567)
+      Country(name: "Italy", population: 59859996),
+      Country(name: "Mexico", population: 118395054),
+      Country(name: "France", population: 65806000),
+      Country(name: "Argentina", population: 40117096),
+      Country(name: "Japan", population: 127290000)
     ])
     content = document.getElementById("content")
     Main = React.createElement(topLevel, countries)
