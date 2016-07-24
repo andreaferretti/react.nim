@@ -17,8 +17,13 @@ type
     getInitialState* {.exportc.}: proc(): S
   ReactComponent* {.importc.} = ref object of RootObj
   ReactNode* {.importc.} = ref object of RootObj
+  EventTarget* = ref object
+    value*: cstring
+  Event* = ref object
+    target* {.exportc.}: EventTarget
+    tp* {.exportc: "type".}: cstring
   Attrs* = ref object
-    onClick* {.exportc.}: proc(): void
+    onClick* {.exportc.}, onChange* {.exportc.}: proc(e: Event)
     className* {.exportc.}, id* {.exportc.}, key* {.exportc.}, placeholder* {.exportc.},
       target* {.exportc.}, value* {.exportc.}: cstring
     checked* {.exportc.}, readOnly* {.exportc.}, required* {.exportc.}: bool
