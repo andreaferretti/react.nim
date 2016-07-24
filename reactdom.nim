@@ -8,6 +8,8 @@ macro idString(x: untyped): auto = newStrLitNode($x)
 template makeDomElement(x: untyped) =
   const tag {.gensym.} = cstring(idString(x))
 
+  proc x*(a: Attrs): ReactNode =
+    React.createElement(tag, a)
   proc x*(a: Attrs, n1: NodeOrString): ReactNode =
     React.createElement(tag, a, n1)
   proc x*(a: Attrs, n1, n2: NodeOrString): ReactNode =
