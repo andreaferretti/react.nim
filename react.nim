@@ -139,20 +139,22 @@ macro defineComponent*(body: stmt): auto =
   for x in getAst(addMethods(body)):
     result.add(x)
 
-macro attrs*(xs: untyped): Attrs =
+macro attrs*(xs: varargs[untyped]): Attrs =
   let a = !"a"
   var body = quote do:
     var `a` {.noinit.}: Attrs
     {.emit: "`a` = {};" .}
 
   for x in xs:
-    if x.kind == nnkExprColonExpr:
+    if x.kind == nnkExprEqExpr:
       let
         k = x[0]
         v = x[1]
       body.add(quote do:
         `a`.`k` = `v`
       )
+    else:
+      error("Expression `" & $x.toStrLit & "` not allowed in `attrs` macro")
 
   body.add(quote do:
     return `a`

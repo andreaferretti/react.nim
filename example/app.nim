@@ -29,7 +29,7 @@ proc makeItems(): ReactComponent =
         f = xs.props
         countries = f.countries.filter((s) => s.name.toLower.contains(f.query))
         list = ul(countries.map((c) => li(
-          attrs(only(key: c.name)),
+          attrs(key = c.name),
           cstring(c.name & ": " & $c.population))) # TODO: cstring should not be needed
         )
       return section(Attrs(className: "col-md-4"), list)
@@ -44,13 +44,13 @@ proc makeSearch(): ReactComponent =
   defineComponent:
     proc renderComponent(s: Search): auto =
       section( # TODO find a way to make div work
-        attrs(only(className: "form-group")),
-        input(attrs(only(
-          className: "form-control",
-          onChange: proc(e: react.Event) = s.props.handler($e.target.value),
-          value: s.props.value,
-          placeholder: "Filter here"
-        )))
+        attrs(className = "form-group"),
+        input(attrs(
+          className = "form-control",
+          onChange = proc(e: react.Event) = s.props.handler($e.target.value),
+          value = s.props.value,
+          placeholder = "Filter here"
+        ))
       )
 
     discard # TODO: adjust the macro so that this is not needed
@@ -63,15 +63,15 @@ proc makeTopLevel(): ReactComponent =
   defineComponent:
     proc renderComponent(s: TopLevel): auto =
       section(
-        section(attrs(only(className: "row")),
-          section(attrs(only(className: "col-md-4")),
+        section(attrs(className = "row"),
+          section(attrs(className = "col-md-4"),
             search(ValueLink(
               value: s.state.query,
               handler: proc(q: string) = s.setState(Filter(query: q))
             ))
           )
         ),
-        section(attrs(only(className: "row")),
+        section(attrs(className = "row"),
           items(ItemFilter(
             countries: s.props.countries,
             query: s.state.query
