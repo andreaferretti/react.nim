@@ -41,7 +41,7 @@ let items = makeItems()
 proc makeSearch(): ReactComponent =
   defineComponent:
     proc renderComponent(s: Search): auto =
-      htmldiv( # TODO find a way to make div work
+      htmldiv(
         attrs(className = "form-group"),
         input(attrs(
           className = "form-control",
