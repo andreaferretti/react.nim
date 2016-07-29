@@ -30,7 +30,7 @@ proc makeItems(): ReactComponent =
         countries = f.countries.filter((s) => s.name.toLower.contains(f.query))
         list = ul(countries.map((c) => li(
           attrs(key = c.name),
-          cstring(c.name & ": " & $c.population))) # TODO: cstring should not be needed
+          c.name & ": " & $c.population))
         )
       return htmldiv(Attrs(className: "col-md-4"), list)
 

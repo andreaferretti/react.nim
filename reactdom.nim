@@ -5,28 +5,58 @@ type NodeOrString = ReactNode or seq[ReactNode] or cstring or string
 
 macro idString(x: untyped): auto = newStrLitNode($x)
 
+template tocstring(x: expr): expr =
+  when x is string: cstring(x)
+  else: x
+
 template makeDomElement(x: untyped, name: string = nil) =
   const tag {.gensym.} = if name == nil: cstring(idString(x)) else: name
 
   proc x*(a: Attrs): ReactNode =
     React.createElement(tag, a)
   proc x*(a: Attrs, n1: NodeOrString): ReactNode =
-    React.createElement(tag, a, n1)
+    let m1 = n1.tocstring
+    React.createElement(tag, a, m1)
   proc x*(a: Attrs, n1, n2: NodeOrString): ReactNode =
-    React.createElement(tag, a, n1, n2)
+    let
+      m1 = n1.tocstring
+      m2 = n2.tocstring
+    React.createElement(tag, a, m1, m2)
   proc x*(a: Attrs, n1, n2, n3: NodeOrString): ReactNode =
-    React.createElement(tag, a, n1, n2, n3)
+    let
+      m1 = n1.tocstring
+      m2 = n2.tocstring
+      m3 = n3.tocstring
+    React.createElement(tag, a, m1, m2, m3)
   proc x*(a: Attrs, n1, n2, n3, n4: NodeOrString): ReactNode =
-    React.createElement(tag, a, n1, n2, n3, n4)
+    let
+      m1 = n1.tocstring
+      m2 = n2.tocstring
+      m3 = n3.tocstring
+      m4 = n4.tocstring
+    React.createElement(tag, a, m1, m2, m3, m4)
 
   proc x*(n1: NodeOrString): ReactNode =
-    React.createElement(tag, nil, n1)
+    let m1 = n1.tocstring
+    React.createElement(tag, nil, m1)
   proc x*(n1, n2: NodeOrString): ReactNode =
-    React.createElement(tag, nil, n1, n2)
+    let
+      m1 = n1.tocstring
+      m2 = n2.tocstring
+    React.createElement(tag, nil, m1, m2)
   proc x*(n1, n2, n3: NodeOrString): ReactNode =
-    React.createElement(tag, nil, n1, n2, n3)
+    let
+      m1 = n1.tocstring
+      m2 = n2.tocstring
+      m3 = n3.tocstring
+    React.createElement(tag, nil, m1, m2, m3)
   proc x*(n1, n2, n3, n4: NodeOrString): ReactNode =
-    React.createElement(tag, nil, n1, n2, n3, n4)
+    let
+      m1 = n1.tocstring
+      m2 = n2.tocstring
+      m3 = n3.tocstring
+      m4 = n4.tocstring
+    React.createElement(tag, nil, m1, m2, m3, m4)
 
 makeDomElement(a)
 makeDomElement(abbr)
