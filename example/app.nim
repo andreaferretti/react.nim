@@ -34,8 +34,6 @@ proc makeItems(): ReactComponent =
         )
       return htmldiv(Attrs(className: "col-md-4"), list)
 
-    discard # TODO: adjust the macro so that this is not needed
-
 let items = makeItems()
 
 ##### Search
@@ -52,8 +50,6 @@ proc makeSearch(): ReactComponent =
           placeholder = "Filter here"
         ))
       )
-
-    discard # TODO: adjust the macro so that this is not needed
 
 let search = makeSearch()
 

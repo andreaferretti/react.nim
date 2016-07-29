@@ -56,9 +56,12 @@ type
 
 macro findComponentType(body: stmt): auto =
   var tp: NimNode
-  for x in body:
-    if x.kind == nnkProcDef and $x[0] == "renderComponent":
-      tp = x[3][1][1] # the type of the first arg of `render`
+  if body.kind == nnkStmtList:
+    for x in body:
+      if x.kind == nnkProcDef and $x[0] == "renderComponent":
+        tp = x[3][1][1] # the type of the first arg of `render`
+  elif body.kind == nnkProcDef and $body[0] == "renderComponent":
+    tp = body[3][1][1] # the type of the first arg of `render`
   if tp == nil:
     error("Could not find the `renderComponent` procedure")
   return tp
@@ -133,11 +136,14 @@ template addMethods(body: stmt): auto =
   return React.createClass(d)
 
 macro defineComponent*(body: stmt): auto =
-  result = newStmtList()
-  for x in body:
-    result.add(x)
-  for x in getAst(addMethods(body)):
-    result.add(x)
+  if body.kind == nnkStmtList:
+    result = body
+    for x in getAst(addMethods(result)):
+      result.add(x)
+  else:
+    result = newStmtList(body)
+    for x in getAst(addMethods(body)):
+      result.add(x)
 
 macro attrs*(xs: varargs[untyped]): Attrs =
   let a = !"a"
