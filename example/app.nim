@@ -59,6 +59,7 @@ proc makeTopLevel(): ReactComponent =
   defineComponent:
     proc renderComponent(s: TopLevel): auto =
       htmldiv(
+        attrs(style = style(marginTop = 50)),
         htmldiv(attrs(className = "row"),
           htmldiv(attrs(className = "col-md-4"),
             search(ValueLink(

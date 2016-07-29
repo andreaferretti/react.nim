@@ -30,6 +30,8 @@ type
     style* {.exportc.}: Style
   Style* = ref object
     color* {.exportc.}, backgroundColor* {.exportc.}: cstring
+    marginTop* {.exportc.}, marginBottom* {.exportc.}, marginLeft* {.exportc.}, marginRight* {.exportc.}: int
+
 
 {.push importcpp .}
 proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs): ReactNode
@@ -168,6 +170,33 @@ macro attrs*(xs: varargs[untyped]): Attrs =
 
   result = quote do:
     proc inner(): Attrs {.gensym.} =
+      `body`
+
+    inner()
+
+macro style*(xs: varargs[untyped]): Style =
+  let a = !"a"
+  var body = quote do:
+    var `a` {.noinit.}: Style
+    {.emit: "`a` = {};" .}
+
+  for x in xs:
+    if x.kind == nnkExprEqExpr:
+      let
+        k = x[0]
+        v = x[1]
+      body.add(quote do:
+        `a`.`k` = `v`
+      )
+    else:
+      error("Expression `" & $x.toStrLit & "` not allowed in `style` macro")
+
+  body.add(quote do:
+    return `a`
+  )
+
+  result = quote do:
+    proc inner(): Style {.gensym.} =
       `body`
 
     inner()
