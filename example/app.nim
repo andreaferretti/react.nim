@@ -1,6 +1,6 @@
 import dom, jsconsole, strutils, sequtils, future
 import react
-from reactdom import section, ul, li, input
+from reactdom import section, ul, li, input, htmldiv
 
 type
   Country = ref object of RootObj
@@ -32,7 +32,7 @@ proc makeItems(): ReactComponent =
           attrs(key = c.name),
           cstring(c.name & ": " & $c.population))) # TODO: cstring should not be needed
         )
-      return section(Attrs(className: "col-md-4"), list)
+      return htmldiv(Attrs(className: "col-md-4"), list)
 
     discard # TODO: adjust the macro so that this is not needed
 

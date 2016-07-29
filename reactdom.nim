@@ -1,16 +1,20 @@
 import macros
 import react
+import jsconsole
 
 type NodeOrString = ReactNode or seq[ReactNode] or cstring or string
 
 macro idString(x: untyped): auto = newStrLitNode($x)
 
-template makeDomElement(x: untyped) =
-  const tag {.gensym.} = cstring(idString(x))
+template makeDomElement(x: untyped, name: string = nil) =
+  const tag {.gensym.} = if name == nil: cstring(idString(x)) else: name
 
   proc x*(a: Attrs): ReactNode =
     React.createElement(tag, a)
   proc x*(a: Attrs, n1: NodeOrString): ReactNode =
+    console.log "called "
+    console.log a
+    console.log n1
     React.createElement(tag, a, n1)
   proc x*(a: Attrs, n1, n2: NodeOrString): ReactNode =
     React.createElement(tag, a, n1, n2)
@@ -57,7 +61,7 @@ makeDomElement(del)
 makeDomElement(details)
 makeDomElement(dfn)
 makeDomElement(dialog)
-makeDomElement(`div`)
+makeDomElement(htmldiv, "div")
 makeDomElement(dl)
 makeDomElement(dt)
 makeDomElement(em)
