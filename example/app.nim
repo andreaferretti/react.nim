@@ -1,6 +1,6 @@
 import dom, jsconsole, strutils, sequtils, future
 import react
-from reactdom import section, ul, li, input, htmldiv
+from reactdom import ul, li, input, htmldiv
 
 type
   Country = ref object of RootObj
@@ -43,7 +43,7 @@ let items = makeItems()
 proc makeSearch(): ReactComponent =
   defineComponent:
     proc renderComponent(s: Search): auto =
-      section( # TODO find a way to make div work
+      htmldiv( # TODO find a way to make div work
         attrs(className = "form-group"),
         input(attrs(
           className = "form-control",
@@ -62,16 +62,16 @@ let search = makeSearch()
 proc makeTopLevel(): ReactComponent =
   defineComponent:
     proc renderComponent(s: TopLevel): auto =
-      section(
-        section(attrs(className = "row"),
-          section(attrs(className = "col-md-4"),
+      htmldiv(
+        htmldiv(attrs(className = "row"),
+          htmldiv(attrs(className = "col-md-4"),
             search(ValueLink(
               value: s.state.query,
               handler: proc(q: string) = s.setState(Filter(query: q))
             ))
           )
         ),
-        section(attrs(className = "row"),
+        htmldiv(attrs(className = "row"),
           items(ItemFilter(
             countries: s.props.countries,
             query: s.state.query

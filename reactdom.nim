@@ -1,6 +1,5 @@
 import macros
 import react
-import jsconsole
 
 type NodeOrString = ReactNode or seq[ReactNode] or cstring or string
 
@@ -12,9 +11,6 @@ template makeDomElement(x: untyped, name: string = nil) =
   proc x*(a: Attrs): ReactNode =
     React.createElement(tag, a)
   proc x*(a: Attrs, n1: NodeOrString): ReactNode =
-    console.log "called "
-    console.log a
-    console.log n1
     React.createElement(tag, a, n1)
   proc x*(a: Attrs, n1, n2: NodeOrString): ReactNode =
     React.createElement(tag, a, n1, n2)
