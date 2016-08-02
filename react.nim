@@ -34,7 +34,9 @@ type
   Style* = ref object
     color* {.exportc.}, backgroundColor* {.exportc.}: cstring
     marginTop* {.exportc.}, marginBottom* {.exportc.}, marginLeft* {.exportc.}, marginRight* {.exportc.}: int
-
+  SvgAttrs* = ref object
+    onClick* {.exportc.}: proc(e: Event)
+    className* {.exportc.}, id* {.exportc.}, key* {.exportc.}, stroke* {.exportc.}, fill* {.exportc.}, transform* {.exportc.}: cstring
 
 {.push importcpp .}
 proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs): ReactNode
