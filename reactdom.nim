@@ -5,7 +5,7 @@ type NodeOrString = ReactNode or seq[ReactNode] or cstring or string
 
 macro idString(x: untyped): auto = newStrLitNode($x)
 
-template tocstring(x: expr): expr =
+template tocstring(x: typed): auto =
   when x is string: cstring(x)
   else: x
 

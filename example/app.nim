@@ -27,7 +27,7 @@ proc makeItems(): ReactComponent =
     proc renderComponent(xs: Items): auto =
       let
         f = xs.props
-        countries = f.countries.filter((s) => s.name.toLower.contains(f.query))
+        countries = f.countries.filter((s) => s.name.toLowerAscii.contains(f.query))
         list = ul(countries.map((c) => li(
           attrs(key = c.name),
           c.name & ": " & $c.population))

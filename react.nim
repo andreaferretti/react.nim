@@ -56,7 +56,7 @@ type
     setState* {.importcpp.}: proc(s: S)
   StatelessComponent*[P] = Component[P, void]
 
-macro findComponentType(body: stmt): auto =
+macro findComponentType(body: untyped): auto =
   var tp: NimNode
   if body.kind == nnkStmtList:
     for x in body:
@@ -68,7 +68,7 @@ macro findComponentType(body: stmt): auto =
     error("Could not find the `renderComponent` procedure")
   return tp
 
-template addMethods(body: stmt): auto =
+template addMethods(body: untyped): auto =
   type C = findComponentType(body)
   var c: C
   type P = type(c.props)
@@ -137,7 +137,7 @@ template addMethods(body: stmt): auto =
 
   return React.createClass(d)
 
-macro defineComponent*(body: stmt): auto =
+macro defineComponent*(body: untyped): auto =
   if body.kind == nnkStmtList:
     result = body
     for x in getAst(addMethods(result)):
