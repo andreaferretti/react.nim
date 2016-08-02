@@ -1,5 +1,8 @@
 import macros, dom, jsconsole, typetraits
 
+when not defined(js):
+  {.error: "React.nim is only available for the JS target" .}
+
 type
   ReactGlobal* {.importc.} = ref object of RootObj
     version*: cstring
