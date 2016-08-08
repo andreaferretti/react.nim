@@ -64,6 +64,14 @@ The value `search` is what is used in Javascript to represent a component
 class - hence calling `makeSearch()` two times will give rise to two
 unrelated components, which is usually not what one wants.
 
+### The `defineComponent` macro
+
+The `defineComponent` takes care of binding the definitions of your lifecycle
+procs as methods of an actual React.js component. At the same time, it passes
+to your lifecycle procs the `this` instance of `ReactComponent[P, S]` (which
+is `Search` in the example above), making it easier to write Javascript
+methods.
+
 ## Using the DOM
 
 ## The top level
