@@ -74,6 +74,22 @@ methods.
 
 ## Using the DOM
 
+The `reactdom` module exports factory methods for all DOM elements supported by
+React. These are just procs that can be called with a variable number of
+children (up to 4 for now).
+
+Children can be `string`, `cstring` or other React nodes, for instance
+
+```nim
+import reactdom
+
+let node = p(span("hello"), "world")
+```
+
+### `Attrs` and `attrs`
+
+### `Style` and `style`
+
 ## The top level
 
 To actually start an application, once you have defined a component, you can
