@@ -32,7 +32,7 @@ proc makeItems(): ReactComponent =
           attrs(key = c.name),
           c.name & ": " & $c.population))
         )
-      return `div`(Attrs(className: "col-md-4"), list)
+      return `div`(attrs(className = "col-md-4"), list)
 
 let items = makeItems()
 
@@ -47,7 +47,8 @@ proc makeSearch(): ReactComponent =
           className = "form-control",
           onChange = proc(e: react.Event) = s.props.handler($e.target.value),
           value = s.props.value,
-          placeholder = "Filter here"
+          placeholder = "Filter here",
+          `type` = "text"
         ))
       )
 

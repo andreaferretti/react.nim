@@ -24,19 +24,72 @@ type
     value*: cstring
   Event* = ref object
     target* {.exportc.}: EventTarget
-    tp* {.exportc: "type".}: cstring
+    `type`* {.exportc.}: cstring
   Attrs* = ref object
     onClick* {.exportc.}, onChange* {.exportc.}: proc(e: Event)
-    className* {.exportc.}, id* {.exportc.}, key* {.exportc.}, placeholder* {.exportc.},
-      target* {.exportc.}, value* {.exportc.}: cstring
-    checked* {.exportc.}, readOnly* {.exportc.}, required* {.exportc.}: bool
+    key* {.exportc.}, `ref`* {.exportc.},
+      dangerouslySetInnerHTML* {.exportc.}: cstring
+
+    accept* {.exportc.}, acceptCharset* {.exportc.}, accessKey* {.exportc.},
+      action* {.exportc.}, alt* {.exportc.}, capture* {.exportc.},
+      cellPadding* {.exportc.}, cellSpacing* {.exportc.}, challenge* {.exportc.},
+      charSet* {.exportc.}, cite* {.exportc.}, classID* {.exportc.},
+      className* {.exportc.}, content* {.exportc.},
+      contextMenu* {.exportc.}, coords* {.exportc.}, crossOrigin* {.exportc.},
+      data* {.exportc.}, dateTime* {.exportc.}, default* {.exportc.},
+      dir* {.exportc.}, download* {.exportc.}, encType* {.exportc.},
+      form* {.exportc.}, formAction* {.exportc.}, formEncType* {.exportc.},
+      formMethod* {.exportc.}, formTarget* {.exportc.}, frameBorder* {.exportc.},
+      headers* {.exportc.}, href* {.exportc.}, hrefLang* {.exportc.},
+      htmlFor* {.exportc.}, httpEquiv* {.exportc.}, icon* {.exportc.},
+      id* {.exportc.}, inputMode* {.exportc.}, integrity* {.exportc.},
+      keyParams* {.exportc.}, keyType* {.exportc.}, kind* {.exportc.},
+      label* {.exportc.}, lang* {.exportc.}, list* {.exportc.},
+      manifest* {.exportc.}, media* {.exportc.}, mediaGroup* {.exportc.},
+      `method`* {.exportc.}, name* {.exportc.}, nonce* {.exportc.},
+      pattern* {.exportc.}, placeholder* {.exportc.}, poster* {.exportc.},
+      profile* {.exportc.}, radioGroup* {.exportc.}, rel* {.exportc.},
+      role* {.exportc.}, sandbox* {.exportc.}, scope* {.exportc.},
+      scrolling* {.exportc.}, seamless* {.exportc.}, shape* {.exportc.},
+      sizes* {.exportc.}, span* {.exportc.}, src* {.exportc.},
+      srcDoc* {.exportc.}, srcLang* {.exportc.}, srcSet* {.exportc.},
+      summary* {.exportc.}, tabIndex* {.exportc.}, target* {.exportc.},
+      title* {.exportc.}, `type`* {.exportc.}, useMap* {.exportc.},
+      value* {.exportc.}, wmode* {.exportc.}, wrap* {.exportc.}: cstring
+
+    allowFullScreen* {.exportc.}, allowTransparency* {.exportc.},
+      async* {.exportc.}, autoComplete* {.exportc.}, autoFocus* {.exportc.},
+      autoPlay* {.exportc.}, checked* {.exportc.}, contentEditable* {.exportc.},
+      controls* {.exportc.}, `defer`* {.exportc.}, disabled* {.exportc.},
+      draggable* {.exportc.}, formNoValidate* {.exportc.}, hidden* {.exportc.},
+      loop* {.exportc.}, multiple* {.exportc.}, muted* {.exportc.},
+      noValidate* {.exportc.}, open* {.exportc.}, preload* {.exportc.},
+      readOnly* {.exportc.}, required* {.exportc.}, reversed* {.exportc.},
+      scoped* {.exportc.}, selected* {.exportc.}, spellCheck* {.exportc.}: bool
+
+    colSpan* {.exportc.}, cols* {.exportc.}, height* {.exportc.},
+      high* {.exportc.}, low* {.exportc.},
+      marginHeight* {.exportc.}, marginWidth* {.exportc.}, max* {.exportc.},
+      maxLength* {.exportc.}, min* {.exportc.}, minLength* {.exportc.},
+      optimum* {.exportc.}, rowSpan* {.exportc.}, rows* {.exportc.},
+      size* {.exportc.}, start* {.exportc.}, step* {.exportc.},
+      width* {.exportc.}: cint
+
     style* {.exportc.}: Style
   Style* = ref object
     color* {.exportc.}, backgroundColor* {.exportc.}: cstring
     marginTop* {.exportc.}, marginBottom* {.exportc.}, marginLeft* {.exportc.}, marginRight* {.exportc.}: int
   SvgAttrs* = ref object
     onClick* {.exportc.}: proc(e: Event)
-    className* {.exportc.}, id* {.exportc.}, key* {.exportc.}, stroke* {.exportc.}, fill* {.exportc.}, transform* {.exportc.}: cstring
+    key* {.exportc.}, `ref`* {.exportc.},
+      dangerouslySetInnerHTML* {.exportc.}: cstring
+    className* {.exportc.}, id* {.exportc.}, stroke* {.exportc.},
+      fill* {.exportc.}, transform* {.exportc.}, d* {.exportc.},
+      points* {.exportc.}: cstring
+    cx* {.exportc.}, cy* {.exportc.}, r* {.exportc.}, x* {.exportc.},
+      y* {.exportc.}, width* {.exportc.}, height* {.exportc.}, rx* {.exportc.},
+      ry* {.exportc.}, x1* {.exportc.}, x2* {.exportc.}, y1* {.exportc.},
+      y2* {.exportc.}, strokeWidth * {.exportc.}: cint
 
 {.push importcpp .}
 proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs): ReactNode
@@ -44,6 +97,11 @@ proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1: auto): R
 proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1, n2: auto): ReactNode
 proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1, n2, n3: auto): ReactNode
 proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs, n1, n2, n3, n4: auto): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: SvgAttrs): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: SvgAttrs, n1: auto): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: SvgAttrs, n1, n2: auto): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: SvgAttrs, n1, n2, n3: auto): ReactNode
+proc createElement*(react: ReactGlobal, tag: cstring, props: SvgAttrs, n1, n2, n3, n4: auto): ReactNode
 proc createElement*(react: ReactGlobal, c: ReactComponent, props: ref RootObj): ReactNode {.varargs.}
 proc createElement*(react: ReactGlobal, c: ReactComponent): ReactNode
 proc createClass*(react: ReactGlobal, c: ReactDescriptor): ReactComponent
@@ -175,6 +233,33 @@ macro attrs*(xs: varargs[untyped]): Attrs =
 
   result = quote do:
     proc inner(): Attrs {.gensym.} =
+      `body`
+
+    inner()
+
+macro svgAttrs*(xs: varargs[untyped]): SvgAttrs =
+  let a = !"a"
+  var body = quote do:
+    var `a` {.noinit.}: SvgAttrs
+    {.emit: "`a` = {};" .}
+
+  for x in xs:
+    if x.kind == nnkExprEqExpr:
+      let
+        k = x[0]
+        v = x[1]
+      body.add(quote do:
+        `a`.`k` = `v`
+      )
+    else:
+      error("Expression `" & $x.toStrLit & "` not allowed in `svgAttrs` macro")
+
+  body.add(quote do:
+    return `a`
+  )
+
+  result = quote do:
+    proc inner(): SvgAttrs {.gensym.} =
       `body`
 
     inner()

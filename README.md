@@ -124,6 +124,7 @@ a first argument of type `Attrs`, which is defined by
 
 ```nim
 Attrs* = ref object
+  # actually, there are many more fields...
   onClick* {.exportc.}, onChange* {.exportc.}: proc(e: Event)
   className* {.exportc.}, id* {.exportc.}, key* {.exportc.}, placeholder* {.exportc.},
     target* {.exportc.}, value* {.exportc.}: cstring
@@ -150,6 +151,7 @@ be used to style HTML elements. The type `Style` is defined by
 
 ```nim
 Style* = ref object
+  # actually, there are many more fields...
   color* {.exportc.}, backgroundColor* {.exportc.}: cstring
   marginTop* {.exportc.}, marginBottom* {.exportc.}, marginLeft* {.exportc.},
     marginRight* {.exportc.}: int
@@ -176,10 +178,14 @@ For SVG tags there is another module called `reactsvg`. It works the same as
 
 ```nim
 SvgAttrs* = ref object
+  # actually, there are many more fields...
   onClick* {.exportc.}: proc(e: Event)
   className* {.exportc.}, id* {.exportc.}, key* {.exportc.},
     stroke* {.exportc.}, fill* {.exportc.}, transform* {.exportc.}: cstring
 ```
+
+As usual, it is more convenient to use the `svgAttrs` macro to generate
+instances.
 
 ## The top level
 
@@ -203,9 +209,11 @@ To be documented
 
 The bindings are still not complete at this point. Things that are left:
 
-* add more fields to the `Attrs`, `SvgAttrs` and `Style` types
+* add more fields to the `SvgAttrs` and `Style` types
 * distinguish between keyboard and mouse events, and make sure that one
   has access to all relevant information in the event callbacks
 * reduce the boilerplate when defining components
 * add dedicated types, together with converters to string, to generate SVG
   transforms and CSS dimensions and colors in a typesafe way
+* generate [stateless functional components](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions)
+  when possible
