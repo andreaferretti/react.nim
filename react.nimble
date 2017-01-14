@@ -13,4 +13,4 @@ task example, "builds example application":
   --define: release
   switch("out", "example/app.js")
   --path: "."
-  setCommand "js", "example/app"
+  setCommand "js", "example/app.nim"
