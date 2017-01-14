@@ -106,7 +106,7 @@ children (up to 4 for now).
 Children can be `string`, `cstring` or other React nodes, for instance
 
 ```nim
-from reactdom import p, span
+from react/reactdom import p, span
 
 let node = p(span("hello"), "world")
 ```

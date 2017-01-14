@@ -1,6 +1,6 @@
 import dom, jsconsole, strutils, sequtils, future
 import react
-from reactdom import ul, li, input, `div`
+from react/reactdom import ul, li, input, `div`
 
 type
   Country = ref object of RootObj

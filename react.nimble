@@ -4,6 +4,7 @@ version       = "0.1.0"
 author        = "Andrea Ferretti"
 description   = "Example React single page application"
 license       = "Apache2"
+skipDirs      = @["example"]
 
 # Dependencies
 
