@@ -1,4 +1,4 @@
-import dom, jsconsole, strutils, sequtils, future
+import dom, jsconsole, jsffi, strutils, sequtils, future
 import react
 from react/reactdom import ul, li, input, `div`
 
@@ -29,10 +29,10 @@ proc makeItems(): ReactComponent =
         f = xs.props
         countries = f.countries.filter((s) => s.name.toLowerAscii.contains(f.query))
         list = ul(countries.map((c) => li(
-          attrs(key = c.name),
+          Attrs{key: c.name},
           c.name & ": " & $c.population))
         )
-      return `div`(attrs(className = "col-md-4"), list)
+      return `div`(Attrs{className: "col-md-4"}, list)
 
 let items = makeItems()
 
@@ -42,14 +42,14 @@ proc makeSearch(): ReactComponent =
   defineComponent:
     proc renderComponent(s: Search): auto =
       `div`(
-        attrs(className = "form-group"),
-        input(attrs(
-          className = "form-control",
-          onChange = proc(e: react.Event) = s.props.handler($e.target.value),
-          value = s.props.value,
-          placeholder = "Filter here",
-          `type` = "text"
-        ))
+        Attrs{className: "form-group"},
+        input(Attrs{
+          className: "form-control",
+          onChange: proc(e: react.Event) = s.props.handler($e.target.value),
+          value: s.props.value,
+          placeholder: "Filter here",
+          `type`: "text"
+        })
       )
 
 let search = makeSearch()
@@ -60,16 +60,16 @@ proc makeTopLevel(): ReactComponent =
   defineComponent:
     proc renderComponent(s: TopLevel): auto =
       `div`(
-        attrs(style = style(marginTop = 50)),
-        `div`(attrs(className = "row"),
-          `div`(attrs(className = "col-md-4"),
+        Attrs{style: Style{marginTop: 50}},
+        `div`(Attrs{className: "row"},
+          `div`(Attrs{className: "col-md-4"},
             search(ValueLink(
               value: s.state.query,
               handler: proc(q: string) = s.setState(Filter(query: q))
             ))
           )
         ),
-        `div`(attrs(className = "row"),
+        `div`(Attrs{className: "row"},
           items(ItemFilter(
             countries: s.props.countries,
             query: s.state.query

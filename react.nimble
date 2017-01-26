@@ -8,7 +8,7 @@ skipDirs      = @["example"]
 
 # Dependencies
 
-requires "nim >= 0.14.3"
+requires "nim >= 0.16.0"
 
 task example, "builds example application":
   --define: release

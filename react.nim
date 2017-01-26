@@ -1,4 +1,4 @@
-import macros, dom, jsconsole, typetraits
+import macros, dom, jsffi, typetraits
 
 when not defined(js):
   {.error: "React.nim is only available for the JS target" .}
@@ -8,88 +8,60 @@ type
     version*: cstring
   ReactDOMGlobal* {.importc.} = ref object of RootObj
     version*: cstring
-  ReactDescriptor {.importcpp.}[P, S] = ref object of RootObj
-    render* {.exportc.}: proc(): ReactNode
-    componentWillMount* {.exportc.}: proc(): void
-    componentWillUnmount* {.exportc.}: proc(): void
-    componentDidMount* {.exportc.}: proc(): void
-    componentWillReceiveProps* {.exportc.}: proc(nextProps: P): void
-    shouldComponentUpdate* {.exportc.}: proc(nextProps: P, nextState: S): bool
-    componentWillUpdate* {.exportc.}: proc(nextProps: P, nextState: S): bool
-    componentDidUpdate* {.exportc.}: proc(prevProps: P, prevState: S): bool
-    getInitialState* {.exportc.}: proc(): S
+  ReactDescriptor* {.importcpp.}[P, S] = ref object of RootObj
+    render*: proc(): ReactNode
+    componentWillMount*: proc(): void
+    componentWillUnmount*: proc(): void
+    componentDidMount*: proc(): void
+    componentWillReceiveProps*: proc(nextProps: P): void
+    shouldComponentUpdate*: proc(nextProps: P, nextState: S): bool
+    componentWillUpdate*: proc(nextProps: P, nextState: S): bool
+    componentDidUpdate*: proc(prevProps: P, prevState: S): bool
+    getInitialState*: proc(): S
   ReactComponent* {.importc.} = ref object of RootObj
   ReactNode* {.importc.} = ref object of RootObj
   EventTarget* = ref object
     value*: cstring
   Event* = ref object
-    target* {.exportc.}: EventTarget
-    `type`* {.exportc.}: cstring
+    target*: EventTarget
+    `type`*: cstring
   Attrs* = ref object
-    onClick* {.exportc.}, onChange* {.exportc.}: proc(e: Event)
-    key* {.exportc.}, `ref`* {.exportc.},
-      dangerouslySetInnerHTML* {.exportc.}: cstring
+    onClick*, onChange*: proc(e: Event)
+    key*, `ref`*, dangerouslySetInnerHTML*: cstring
 
-    accept* {.exportc.}, acceptCharset* {.exportc.}, accessKey* {.exportc.},
-      action* {.exportc.}, alt* {.exportc.}, capture* {.exportc.},
-      cellPadding* {.exportc.}, cellSpacing* {.exportc.}, challenge* {.exportc.},
-      charSet* {.exportc.}, cite* {.exportc.}, classID* {.exportc.},
-      className* {.exportc.}, content* {.exportc.},
-      contextMenu* {.exportc.}, coords* {.exportc.}, crossOrigin* {.exportc.},
-      data* {.exportc.}, dateTime* {.exportc.}, default* {.exportc.},
-      dir* {.exportc.}, download* {.exportc.}, encType* {.exportc.},
-      form* {.exportc.}, formAction* {.exportc.}, formEncType* {.exportc.},
-      formMethod* {.exportc.}, formTarget* {.exportc.}, frameBorder* {.exportc.},
-      headers* {.exportc.}, href* {.exportc.}, hrefLang* {.exportc.},
-      htmlFor* {.exportc.}, httpEquiv* {.exportc.}, icon* {.exportc.},
-      id* {.exportc.}, inputMode* {.exportc.}, integrity* {.exportc.},
-      keyParams* {.exportc.}, keyType* {.exportc.}, kind* {.exportc.},
-      label* {.exportc.}, lang* {.exportc.}, list* {.exportc.},
-      manifest* {.exportc.}, media* {.exportc.}, mediaGroup* {.exportc.},
-      `method`* {.exportc.}, name* {.exportc.}, nonce* {.exportc.},
-      pattern* {.exportc.}, placeholder* {.exportc.}, poster* {.exportc.},
-      profile* {.exportc.}, radioGroup* {.exportc.}, rel* {.exportc.},
-      role* {.exportc.}, sandbox* {.exportc.}, scope* {.exportc.},
-      scrolling* {.exportc.}, seamless* {.exportc.}, shape* {.exportc.},
-      sizes* {.exportc.}, span* {.exportc.}, src* {.exportc.},
-      srcDoc* {.exportc.}, srcLang* {.exportc.}, srcSet* {.exportc.},
-      summary* {.exportc.}, tabIndex* {.exportc.}, target* {.exportc.},
-      title* {.exportc.}, `type`* {.exportc.}, useMap* {.exportc.},
-      value* {.exportc.}, wmode* {.exportc.}, wrap* {.exportc.}: cstring
+    accept*, acceptCharset*, accessKey*, action*, alt*, capture*,
+      cellPadding*, cellSpacing*, challenge*, charSet*, cite*, classID*,
+      className*, content*, contextMenu*, coords*, crossOrigin*,
+      data*, dateTime*, default*, dir*, download*, encType*, form*,
+      formAction*, formEncType*, formMethod*, formTarget*, frameBorder*,
+      headers*, href*, hrefLang*, htmlFor*, httpEquiv*, icon*, id*, inputMode*,
+      integrity*, keyParams*, keyType*, kind*, label*, lang*, list*,
+      manifest*, media*, mediaGroup*, `method`*, name*, nonce*, pattern*,
+      placeholder*, poster*, profile*, radioGroup*, rel*, role*, sandbox*,
+      scope*, scrolling*, seamless*, shape*, sizes*, span*, src*, srcDoc*,
+      srcLang*, srcSet*, summary*, tabIndex*, target*, title*, `type`*,
+      useMap*, value*, wmode*, wrap*: cstring
 
-    allowFullScreen* {.exportc.}, allowTransparency* {.exportc.},
-      async* {.exportc.}, autoComplete* {.exportc.}, autoFocus* {.exportc.},
-      autoPlay* {.exportc.}, checked* {.exportc.}, contentEditable* {.exportc.},
-      controls* {.exportc.}, `defer`* {.exportc.}, disabled* {.exportc.},
-      draggable* {.exportc.}, formNoValidate* {.exportc.}, hidden* {.exportc.},
-      loop* {.exportc.}, multiple* {.exportc.}, muted* {.exportc.},
-      noValidate* {.exportc.}, open* {.exportc.}, preload* {.exportc.},
-      readOnly* {.exportc.}, required* {.exportc.}, reversed* {.exportc.},
-      scoped* {.exportc.}, selected* {.exportc.}, spellCheck* {.exportc.}: bool
+    allowFullScreen*, allowTransparency*, async*, autoComplete*, autoFocus*,
+      autoPlay*, checked*, contentEditable*, controls*, `defer`*, disabled*,
+      draggable*, formNoValidate*, hidden*, loop*, multiple*, muted*,
+      noValidate*, open*, preload*, readOnly*, required*, reversed*,
+      scoped*, selected*, spellCheck*: bool
 
-    colSpan* {.exportc.}, cols* {.exportc.}, height* {.exportc.},
-      high* {.exportc.}, low* {.exportc.},
-      marginHeight* {.exportc.}, marginWidth* {.exportc.}, max* {.exportc.},
-      maxLength* {.exportc.}, min* {.exportc.}, minLength* {.exportc.},
-      optimum* {.exportc.}, rowSpan* {.exportc.}, rows* {.exportc.},
-      size* {.exportc.}, start* {.exportc.}, step* {.exportc.},
-      width* {.exportc.}: cint
+    colSpan*, cols*, height*, high*, low*, marginHeight*, marginWidth*, max*,
+      maxLength*, min*, minLength*, optimum*, rowSpan*, rows*, size*, start*,
+      step*, width*: cint
 
-    style* {.exportc.}: Style
+    style*: Style
   Style* = ref object
-    color* {.exportc.}, backgroundColor* {.exportc.}: cstring
-    marginTop* {.exportc.}, marginBottom* {.exportc.}, marginLeft* {.exportc.}, marginRight* {.exportc.}: int
+    color*, backgroundColor*: cstring
+    marginTop*, marginBottom*, marginLeft*, marginRight*: int
   SvgAttrs* = ref object
-    onClick* {.exportc.}: proc(e: Event)
-    key* {.exportc.}, `ref`* {.exportc.},
-      dangerouslySetInnerHTML* {.exportc.}: cstring
-    className* {.exportc.}, id* {.exportc.}, stroke* {.exportc.},
-      fill* {.exportc.}, transform* {.exportc.}, d* {.exportc.},
-      points* {.exportc.}: cstring
-    cx* {.exportc.}, cy* {.exportc.}, r* {.exportc.}, x* {.exportc.},
-      y* {.exportc.}, width* {.exportc.}, height* {.exportc.}, rx* {.exportc.},
-      ry* {.exportc.}, x1* {.exportc.}, x2* {.exportc.}, y1* {.exportc.},
-      y2* {.exportc.}, strokeWidth * {.exportc.}: cint
+    onClick*: proc(e: Event)
+    key*, `ref`*, dangerouslySetInnerHTML*, className*, id*, stroke*,
+      fill*, transform*, d*, points*: cstring
+    cx*, cy*, r*, x*, y*, width*, height*, rx*, ry*, x1*, x2*, y1*,
+      y2*, strokeWidth *: cint
 
 {.push importcpp .}
 proc createElement*(react: ReactGlobal, tag: cstring, props: Attrs): ReactNode
@@ -142,56 +114,34 @@ template addMethods(body: untyped): auto =
     var d = ReactDescriptor[P, void]()
 
   when compiles(renderComponent(c)):
-    d.render = proc(): auto =
-      var this {.importc,nodecl.}: C
-      return renderComponent(this)
+    d.render = bindMethod renderComponent
 
   when compiles(componentWillMount(c)):
-    d.componentWillMount = proc(): auto =
-      var this {.importc,nodecl.}: C
-      componentWillMount(this)
+    d.componentWillMount = bindMethod componentWillMount
 
   when compiles(componentWillUnmount(c)):
-    d.componentWillUnmount = proc(): auto =
-      var this {.importc,nodecl.}: C
-      componentWillUnmount(this)
+    d.componentWillUnmount = bindMethod componentWillUnmount
 
   when compiles(componentDidMount(c)):
-    d.componentDidMount = proc(): auto =
-      var this {.importc,nodecl.}: C
-      componentDidMount(this)
+    d.componentDidMount = bindMethod componentDidMount
 
   when compiles(componentWillReceiveProps(c, c.props)):
-    d.componentWillReceiveProps = proc(nextProps: P): auto =
-      var this {.importc,nodecl.}: C
-      componentWillReceiveProps(this, nextProps)
+    d.componentWillReceiveProps = bindMethod componentWillReceiveProps
 
   when compiles(shouldComponentUpdate(c, c.props, c.state)):
-    d.shouldComponentUpdate = proc(nextProps: P, nextState: S): auto =
-      var this {.importc,nodecl.}: C
-      return shouldComponentUpdate(this, nextProps, nextState)
+    d.shouldComponentUpdate = bindMethod shouldComponentUpdate
   elif compiles(shouldComponentUpdate(c, c.props)):
-    d.shouldComponentUpdate = proc(nextProps: P): bool =
-      var this {.importc,nodecl.}: C
-      return shouldComponentUpdate(this, nextProps)
+    d.shouldComponentUpdate = bindMethod shouldComponentUpdate
 
   when compiles(componentWillUpdate(c, c.props, c.state)):
-    d.componentWillUpdate = proc(nextProps: P, nextState: S): auto =
-      var this {.importc,nodecl.}: C
-      return componentWillUpdate(this, nextProps, nextState)
+    d.componentWillUpdate = bindMethod componentWillUpdate
   elif compiles(componentWillUpdate(c, c.props)):
-    d.componentWillUpdate = proc(nextProps: P): bool =
-      var this {.importc,nodecl.}: C
-      return componentWillUpdate(this, nextProps)
+    d.componentWillUpdate = bindMethod componentWillUpdate
 
   when compiles(componentDidUpdate(c, c.props, c.state)):
-    d.componentDidUpdate = proc(nextProps: P, nextState: S): auto =
-      var this {.importc,nodecl.}: C
-      return componentDidUpdate(this, nextProps, nextState)
+    d.componentDidUpdate = bindMethod componentDidUpdate
   elif compiles(componentDidUpdate(c, c.props)):
-    d.componentDidUpdate = proc(nextProps: P): bool =
-      var this {.importc,nodecl.}: C
-      return componentDidUpdate(this, nextProps)
+    d.componentDidUpdate = bindMethod componentDidUpdate
 
   when compiles(getInitialState(c.props)):
     d.getInitialState = proc(): auto =
@@ -209,87 +159,6 @@ macro defineComponent*(body: untyped): auto =
     result = newStmtList(body)
     for x in getAst(addMethods(body)):
       result.add(x)
-
-macro attrs*(xs: varargs[untyped]): Attrs =
-  let a = !"a"
-  var body = quote do:
-    var `a` {.noinit.}: Attrs
-    {.emit: "`a` = {};" .}
-
-  for x in xs:
-    if x.kind == nnkExprEqExpr:
-      let
-        k = x[0]
-        v = x[1]
-      body.add(quote do:
-        `a`.`k` = `v`
-      )
-    else:
-      error("Expression `" & $x.toStrLit & "` not allowed in `attrs` macro")
-
-  body.add(quote do:
-    return `a`
-  )
-
-  result = quote do:
-    proc inner(): Attrs {.gensym.} =
-      `body`
-
-    inner()
-
-macro svgAttrs*(xs: varargs[untyped]): SvgAttrs =
-  let a = !"a"
-  var body = quote do:
-    var `a` {.noinit.}: SvgAttrs
-    {.emit: "`a` = {};" .}
-
-  for x in xs:
-    if x.kind == nnkExprEqExpr:
-      let
-        k = x[0]
-        v = x[1]
-      body.add(quote do:
-        `a`.`k` = `v`
-      )
-    else:
-      error("Expression `" & $x.toStrLit & "` not allowed in `svgAttrs` macro")
-
-  body.add(quote do:
-    return `a`
-  )
-
-  result = quote do:
-    proc inner(): SvgAttrs {.gensym.} =
-      `body`
-
-    inner()
-
-macro style*(xs: varargs[untyped]): Style =
-  let a = !"a"
-  var body = quote do:
-    var `a` {.noinit.}: Style
-    {.emit: "`a` = {};" .}
-
-  for x in xs:
-    if x.kind == nnkExprEqExpr:
-      let
-        k = x[0]
-        v = x[1]
-      body.add(quote do:
-        `a`.`k` = `v`
-      )
-    else:
-      error("Expression `" & $x.toStrLit & "` not allowed in `style` macro")
-
-  body.add(quote do:
-    return `a`
-  )
-
-  result = quote do:
-    proc inner(): Style {.gensym.} =
-      `body`
-
-    inner()
 
 proc `()`*[P](c: ReactComponent, p: P): ReactNode =
   React.createElement(c, p)
