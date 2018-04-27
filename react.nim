@@ -1,5 +1,7 @@
 import macros, dom, jsffi, typetraits
 
+{.experimental: "callOperator".}
+
 when not defined(js):
   {.error: "React.nim is only available for the JS target" .}
 

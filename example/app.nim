@@ -1,4 +1,4 @@
-import dom, jsconsole, jsffi, strutils, sequtils, future
+import dom, jsconsole, jsffi, strutils, sequtils, sugar
 import react
 from react/reactdom import ul, li, input, `div`
 
