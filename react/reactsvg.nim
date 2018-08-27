@@ -9,8 +9,8 @@ template tocstring(x: typed): auto =
   when x is string: cstring(x)
   else: x
 
-template makeSvgElement(x: untyped, name: string = nil) =
-  const tag {.gensym.} = if name == nil: cstring(idString(x)) else: name
+template makeSvgElement(x: untyped, name: string = "") =
+  const tag {.gensym.} = if name == "": cstring(idString(x)) else: name
   const NIL: SvgAttrs = nil
 
   proc x*(a: SvgAttrs): ReactNode =

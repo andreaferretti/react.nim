@@ -9,8 +9,8 @@ template tocstring(x: typed): auto =
   when x is string: cstring(x)
   else: x
 
-template makeDomElement(x: untyped, name: string = nil) =
-  const tag {.gensym.} = if name == nil: cstring(idString(x)) else: name
+template makeDomElement(x: untyped, name: string = "") =
+  const tag {.gensym.} = if name == "": cstring(idString(x)) else: name
   const NIL: Attrs = nil
 
   proc x*(a: Attrs): ReactNode =
