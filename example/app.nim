@@ -60,7 +60,7 @@ proc makeTopLevel(): ReactComponent =
   defineComponent:
     proc renderComponent(s: TopLevel): auto =
       `div`(
-        Attrs{style: Style{marginTop: 50}},
+        Attrs{style: react.Style{marginTop: 50}},
         `div`(Attrs{className: "row"},
           `div`(Attrs{className: "col-md-4"},
             search(ValueLink(
