@@ -1,4 +1,4 @@
-import macros, dom, jsffi, typetraits
+import macros, dom, jsffi
 
 {.experimental: "callOperator".}
 
@@ -10,7 +10,7 @@ type
     version*: cstring
   ReactDOMGlobal* {.importc.} = ref object of RootObj
     version*: cstring
-  ReactDescriptor* {.importcpp.}[P, S] = ref object of RootObj
+  ReactDescriptor* [P, S] {.importcpp.} = ref object of RootObj
     render*: proc(): ReactNode
     componentWillMount*: proc(): void
     componentWillUnmount*: proc(): void
@@ -147,7 +147,7 @@ template addMethods(body: untyped): auto =
 
   when compiles(getInitialState(c.props)):
     d.getInitialState = proc(): auto =
-      var this {.importc,nodecl.}: C
+      var this {.importc: "this", nodecl.}: C
       return getInitialState(this.props)
 
   return React.createClass(d)
