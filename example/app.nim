@@ -2,6 +2,8 @@ import dom, jsconsole, jsffi, strutils, sequtils, sugar
 import react
 from react/reactdom import ul, li, input, `div`
 
+{.experimental: "callOperator".}
+
 type
   Country = ref object of RootObj
     name: string
